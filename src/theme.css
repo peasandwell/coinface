@@ -1,0 +1,23 @@
+/* Themes */
+:root {
+	--color-primary: #F54EA2;
+	--color-secondary: #43E695;
+	--color-bg-main: #1B1B26;
+
+	/* Buttons */
+	--primary-btn-bg: var(--color-primary);
+	--primary-btn-txt: white;
+	--primary-btn-bg-disabled: #733650;
+	--primary-btn-txt-disabled: #ddd;
+
+	--secondary-btn-bg: var(--color-secondary);
+	--secondary-btn-txt: white;
+	--secondary-btn-bg-disabled: #2B6C52;
+	--secondary-btn-txt-disabled: #ddd;
+
+	/* Inputs */
+	--input-bg: var(--color-bg-main);
+	--input-txt: white;
+	--input-border: transparent;
+	--input-border-focus: white;
+}

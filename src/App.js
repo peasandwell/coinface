@@ -1,5 +1,6 @@
 import React from 'react';
 import './reset.css';
+import './theme.css';
 import './base.css';
 import './App.css';
 

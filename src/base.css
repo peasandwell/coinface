@@ -27,9 +27,8 @@
 	font-weight: thinner;
 }
 
-
 body {
-	background: #1B1B26;
+	background: var(--color-bg-main);
 	font-family: SanFrancisco, "Times New Roman", san-serif;
 	font-size: 16px;
 	line-height: 100%;
