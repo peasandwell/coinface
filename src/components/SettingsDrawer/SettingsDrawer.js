@@ -5,7 +5,7 @@ import './SettingsDrawer.css';
 
 const SettingsDrawer = ({ children, closeButtonText, isOpen, onClose }) => (
 	<div className={`SettingsDrawer ${isOpen ? 'is-open' : 'is-closed'}`}>
-		<div className="inner">
+		<div className="inner" id="myId">
 			{children}
 			<button type="button" className="close-button" onClick={onClose}>
 				{closeButtonText}
