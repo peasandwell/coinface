@@ -19,7 +19,7 @@ class App extends React.Component {
 		this.settingsContainer = {};
 		this.state = {
 			settingsDrawerIsOpen: false,
-			joyrideisRunning: true,
+			joyrideIsRunning: true,
 		};
 	}
 
@@ -31,18 +31,26 @@ class App extends React.Component {
 
 	joyrideCallback(data) {
 		console.log(data.type, data.index);
-		// if (data.type == 'step:after' && data.index == 0) {
-		// 	console.log(this.joyride);
-		// 	this.setState({ settingsDrawerIsOpen: true, joyrideisRunning: false });
-		// 	// if it's the first step
+
+		// // open the settings drawer before the second step
+		// if (data.type == 'step:before' && data.index == 1) {
+		// 	this.setState({ settingsDrawerIsOpen: true, joyrideIsRunning: false });
 		// 	setTimeout(() => {
-		// 		this.setState({ joyrideisRunning: true });
+		// 		this.setState({ joyrideIsRunning: true });
+		// 	}, 1500);
+		// }
+		//
+		// // close the settings drawer after the third step
+		// if (data.type == 'step:after' && data.index == 2) {
+		// 	this.setState({ settingsDrawerIsOpen: false, joyrideIsRunning: false });
+		// 	setTimeout(() => {
+		// 		this.setState({ joyrideIsRunning: true });
 		// 	}, 1500);
 		// }
 	}
 
 	render() {
-		const { settingsDrawerIsOpen, joyrideisRunning } = this.state;
+		const { settingsDrawerIsOpen, joyrideIsRunning } = this.state;
 		this.settingsContainer = document.getElementById('myId');
 
 		return (
@@ -52,11 +60,12 @@ class App extends React.Component {
 					ref={joyride => (this.joyride = joyride)}
 					allowClicksThruHole={true}
 					autoStart={true}
+					showBackButton={false}
 					showSkipButton={true}
 					scrollToSteps={false}
 					type="single"
 					showStepsProgress={true}
-					run={joyrideisRunning}
+					run={joyrideIsRunning}
 					debug={false}
 					callback={this.joyrideCallback}
 					steps={[
@@ -121,23 +130,72 @@ class App extends React.Component {
 							),
 							selector: '.TrustSetting',
 						},
+						// {
+						// 	title: 'Contract Address',
+						// 	text: (
+						// 		<div>
+						// 			<p>
+						// 				We also need to know some information about the currency
+						// 				that Coinface will be looking for.
+						// 			</p>
+						// 			<p>
+						// 				This is known as the <strong>Contract Address</strong>.
+						// 			</p>
+						// 			<p>
+						// 				<a href="#">(Tell me more about Contract Addresses)</a>
+						// 			</p>
+						// 		</div>
+						// 	),
+						// 	selector: '.TrustSetting',
+						// },
 						{
-							title: 'Contract Address',
+							title: 'Pending Transactions',
 							text: (
 								<div>
 									<p>
-										We also need to know some information about the currency
-										that Coinface will be looking for.
+										This shows transactions that have been sent to you but have
+										not yet completed the required number of Confirmations.
 									</p>
 									<p>
-										This is known as the <strong>Contract Address</strong>.
-									</p>
-									<p>
-										<a href="#">(Tell me more about Contract Addresses)</a>
+										As more confirmations are completed against them the
+										background will fill up, until it is fully black, at which
+										point it has completed the required confirmations and will
+										move into the "Completed" section of the page.
 									</p>
 								</div>
 							),
-							selector: '.TrustSetting',
+							selector: '.PendingTransactionsList',
+						},
+						{
+							title: 'Completed Transactions',
+							text: (
+								<div>
+									<p>
+										Once a transaction has had the required number of
+										confirmations (as specified by the "Risk" slider in the
+										settings) it will display below, in descending date order.
+										The name, id of the wallet, time and amount are shown.
+									</p>
+								</div>
+							),
+							selector: '.CompletedTransactionsList',
+						},
+						{
+							title: 'Date Selector',
+							text: (
+								<div>
+									<p>
+										If you need to see the totals from previous days then you
+										can select the Date here and you will be shown a calendar
+										listing all the previous days transactions.
+									</p>
+									<p>
+										Clicking a specific date in the calendar will display all
+										the Completed transactions for that day.
+									</p>
+								</div>
+							),
+							selector: '.DailyTotal',
 						},
 					]}
 				/>
