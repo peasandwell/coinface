@@ -10,7 +10,7 @@ import TransactionList from './containers/TransactionList/TransactionList';
 import ConnectedSettingsDrawer from './containers/SettingsDrawer/SettingsDrawer';
 
 import Joyride from 'react-joyride';
-import '../node_modules/react-joyride/lib/react-joyride-compiled.css';
+import 'react-joyride/lib/react-joyride-compiled.css';
 
 class App extends React.Component {
 	constructor(props) {
@@ -27,26 +27,33 @@ class App extends React.Component {
 		this.setState(prevState => {
 			return { settingsDrawerIsOpen: !prevState.settingsDrawerIsOpen };
 		});
+
+		if (this.state.joyrideIsRunning && this.joyride.getProgress().index === 0) {
+			this.joyride.next();
+		}
 	}
 
 	joyrideCallback(data) {
-		console.log(data.type, data.index);
+		// open the settings drawer before the second step
+		if (data.type == 'step:before' && data.index == 1) {
+			this.setState({ settingsDrawerIsOpen: true, joyrideIsRunning: false });
+			setTimeout(() => {
+				this.setState({ joyrideIsRunning: true });
+			}, 1000);
+		}
 
-		// // open the settings drawer before the second step
-		// if (data.type == 'step:before' && data.index == 1) {
-		// 	this.setState({ settingsDrawerIsOpen: true, joyrideIsRunning: false });
-		// 	setTimeout(() => {
-		// 		this.setState({ joyrideIsRunning: true });
-		// 	}, 1500);
-		// }
-		//
-		// // close the settings drawer after the third step
-		// if (data.type == 'step:after' && data.index == 2) {
-		// 	this.setState({ settingsDrawerIsOpen: false, joyrideIsRunning: false });
-		// 	setTimeout(() => {
-		// 		this.setState({ joyrideIsRunning: true });
-		// 	}, 1500);
-		// }
+		// close the settings drawer after the third step
+		if (data.type == 'step:after' && data.index == 2) {
+			this.setState({ settingsDrawerIsOpen: false, joyrideIsRunning: false });
+			setTimeout(() => {
+				this.setState({ joyrideIsRunning: true });
+			}, 1000);
+		}
+
+		// update the state if the joyride journey has completed
+		if (data.type == 'finished') {
+			this.setState({ joyrideIsRunning: false });
+		}
 	}
 
 	render() {
@@ -54,7 +61,11 @@ class App extends React.Component {
 		this.settingsContainer = document.getElementById('myId');
 
 		return (
-			<div className={`App ${settingsDrawerIsOpen ? 'settings-is-open' : ''}`}>
+			<div
+				className={`App ${settingsDrawerIsOpen ? 'settings-is-open' : ''} ${
+					joyrideIsRunning ? 'joyride-is-running' : ''
+				}`}
+			>
 				<h1 className="accessible">Gromits POS</h1>
 				<Joyride
 					ref={joyride => (this.joyride = joyride)}
@@ -63,10 +74,11 @@ class App extends React.Component {
 					showBackButton={false}
 					showSkipButton={true}
 					scrollToSteps={false}
-					type="single"
+					type="continuous"
 					showStepsProgress={true}
 					run={joyrideIsRunning}
 					debug={false}
+					disableOverlay={true}
 					callback={this.joyrideCallback}
 					steps={[
 						{
@@ -178,7 +190,7 @@ class App extends React.Component {
 									</p>
 								</div>
 							),
-							selector: '.CompletedTransactionsList',
+							selector: '.Transaction',
 						},
 						{
 							title: 'Date Selector',
